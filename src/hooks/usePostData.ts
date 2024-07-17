@@ -3,6 +3,6 @@ import postUser from "../api/axiosConfig";
 
 export const usePostData = () => {
     return useMutation({
-        mutationFn: (data: any) => postUser.post("/register", data),
+        mutationFn: (data: any) => postUser.post("/auth/register", data),
     });
 }
