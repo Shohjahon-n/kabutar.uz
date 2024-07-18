@@ -20,7 +20,7 @@ interface IFormInput {
 }
 
 const UserProfileEdit: React.FC = () => {
-    const mutation = usePostData();
+    // const mutation = usePostData();
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm({
         defaultValues: {
@@ -32,13 +32,28 @@ const UserProfileEdit: React.FC = () => {
         mode: 'onChange',
     });
 
+    // const { isLoading, error, data } = mutation;
+
+    const setData = (data: any) => {
+        fetch('http://localhost:1111/auth/register', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => console.log(json));
+    }
 
     const onSubmit = (data: IFormInput) => {
         if (data) {
-            mutation.mutate(data);
+            setData(data);
         }
         reset();
     };
+
+    // console.log(data);
 
     return (
         <Flex
