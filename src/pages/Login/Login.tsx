@@ -9,43 +9,30 @@ import {
     useColorModeValue,
     Text,
 } from '@chakra-ui/react';
-
 import { useForm } from 'react-hook-form';
-import { usePostData } from '../../hooks/usePostData';
+import { useLogin } from '../../hooks/useGetUser';
+import React from 'react';
 
 interface IFormInput {
-    username: string
-    phoneNumber: string
-    password: string
+    phoneNumber: string;
+    password: string;
 }
 
-const UserProfileEdit: React.FC = () => {
-    const mutation = usePostData();
+export const Login: React.FC = () => {
+    const mutation = useLogin();
 
-    const { data } = mutation
     const {
         handleSubmit,
         register,
         reset,
         formState: { errors },
-    } = useForm<IFormInput>({
-        defaultValues: {
-            username: '',
-            phoneNumber: '',
-            password: '',
-        },
-        mode: 'onChange',
-    });
+    } = useForm<IFormInput>();
 
     const onSubmit = (data: IFormInput) => {
         mutation.mutate(data);
-        console.log(data);
-
         reset();
+        console.log(data);
     };
-
-    console.log(data);
-
 
     return (
         <Flex
@@ -64,37 +51,35 @@ const UserProfileEdit: React.FC = () => {
                 p={6}
                 my={12}
             >
-                <form onSubmit={handleSubmit((data: IFormInput) => onSubmit(data))}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
-                        Register
+                        Login
                     </Heading>
-                    <FormControl id="userName">
-                        <FormLabel>User name</FormLabel>
+                    <FormControl mt={6}>
+                        <FormLabel>Phone Number</FormLabel>
                         <Input
-                            placeholder="userName"
+                            placeholder="Phone Number"
                             _placeholder={{ color: 'gray.500' }}
                             type="text"
-                            {...register('username', { required: { value: true, message: 'User name is required' }, minLength: { value: 3, message: 'Minimum length should be 3' }, maxLength: { value: 20, message: 'Maximum length should be 20' } })}
-                        />
-                        <Text color={'red'}>{errors.username?.message}</Text>
-                    </FormControl>
-                    <FormControl id="PhoneNumber">
-                        <FormLabel>Phone number</FormLabel>
-                        <Input
-                            placeholder="+998 (__) ___-__-__"
-                            _placeholder={{ color: 'gray.500' }}
-                            type="number"
-                            {...register('phoneNumber', { required: { value: true, message: 'Phone number is required' }, minLength: { value: 12, message: 'Minimum length should be 12' }, maxLength: { value: 12, message: 'Maximum length should be 12' } })}
+                            {...register('phoneNumber', {
+                                required: 'Phone Number is required',
+                                minLength: { value: 3, message: 'Minimum length is 3' },
+                                maxLength: { value: 20, message: 'Maximum length is 20' },
+                            })}
                         />
                         <Text color={'red'}>{errors.phoneNumber?.message}</Text>
                     </FormControl>
-                    <FormControl id="password" mb={6}>
+                    <FormControl mb={6}>
                         <FormLabel>Password</FormLabel>
                         <Input
                             placeholder="Password"
                             _placeholder={{ color: 'gray.500' }}
                             type="password"
-                            {...register('password', { required: { value: true, message: 'Password is required' }, minLength: { value: 6, message: 'Minimum length should be 6' }, maxLength: { value: 20, message: 'Maximum length should be 20' } })}
+                            {...register('password', {
+                                required: 'Password is required',
+                                minLength: { value: 6, message: 'Minimum length is 6' },
+                                maxLength: { value: 20, message: 'Maximum length is 20' },
+                            })}
                         />
                         <Text color={'red'}>{errors.password?.message}</Text>
                     </FormControl>
@@ -103,7 +88,7 @@ const UserProfileEdit: React.FC = () => {
                             bg={'blue.400'}
                             color={'white'}
                             w="full"
-                            type='submit'
+                            type="submit"
                             _hover={{
                                 bg: 'blue.500',
                             }}
@@ -111,10 +96,14 @@ const UserProfileEdit: React.FC = () => {
                             Submit
                         </Button>
                     </Stack>
+                    {mutation.isError && (
+                        <Text color="red.500">{(mutation.error as Error).message}</Text>
+                    )}
+                    {mutation.isSuccess && (
+                        <Text color="green.500">Login successful!</Text>
+                    )}
                 </form>
             </Stack>
-        </Flex >
+        </Flex>
     );
 };
-
-export default UserProfileEdit;
