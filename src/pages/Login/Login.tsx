@@ -12,14 +12,17 @@ import {
 import { useForm } from 'react-hook-form';
 import { useLogin } from '../../hooks/useGetUser';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface IFormInput {  
+interface IFormInput {
     phoneNumber: string;
     password: string;
 }
 
 export const Login: React.FC = () => {
     const mutation = useLogin();
+
+    const navigate = useNavigate();
 
     const {
         handleSubmit,
@@ -31,7 +34,8 @@ export const Login: React.FC = () => {
     const onSubmit = (data: IFormInput) => {
         mutation.mutate(data);
         reset();
-        console.log(data);
+        localStorage.setItem('token', JSON.stringify(mutation.data.token));
+        navigate('/');
     };
 
     return (

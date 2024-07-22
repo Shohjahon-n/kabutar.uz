@@ -12,6 +12,7 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { usePostData } from '../../hooks/usePostData';
+import { useNavigate } from 'react-router-dom';
 
 interface IFormInput {
     username: string
@@ -22,7 +23,8 @@ interface IFormInput {
 const UserProfileEdit: React.FC = () => {
     const mutation = usePostData();
 
-    const { data } = mutation
+    const navigate = useNavigate();
+
     const {
         handleSubmit,
         register,
@@ -39,13 +41,10 @@ const UserProfileEdit: React.FC = () => {
 
     const onSubmit = (data: IFormInput) => {
         mutation.mutate(data);
-        console.log(data);
-
         reset();
+        localStorage.setItem('token', JSON.stringify(mutation.data.token));
+        navigate('/');
     };
-
-    console.log(data);
-
 
     return (
         <Flex
