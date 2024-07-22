@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { useLogin } from '../../hooks/useGetUser';
 import React from 'react';
 
-interface IFormInput {
+interface IFormInput {  
     phoneNumber: string;
     password: string;
 }
